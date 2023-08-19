@@ -1,0 +1,33 @@
+`timescale 1ns/1ps;
+module clockdivider_tb;
+
+	// Inputs
+	reg clk;
+	reg rst;
+
+	// Outputs
+	wire divide_4;
+
+	// Instantiate the Unit Under Test (UUT)
+	clockdivider uut (
+		.clk(clk), 
+		.divide_4(divide_4), 
+		.rst(rst)
+	);
+
+	initial begin
+		// Initialize Inputs
+		clk = 0;
+		rst = 1;
+		#50 rst=0;
+        
+		// Add stimulus here
+
+	end
+	always
+	#10 clk=~clk;
+	
+	initial 
+	#100 $finish;
+      
+endmodule

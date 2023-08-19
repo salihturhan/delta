@@ -1,0 +1,29 @@
+module pipomod(clk,clear, pi, po);
+
+input clk,clear;
+
+input [3:0] pi;
+
+output [3:0] po;
+
+wire [3:0] pi;
+
+reg [3:0] po;
+
+always @(posedge clk)//clock hattının yükselen kenarında aktive olur
+
+begin
+
+if (clear)
+
+po<= 4'b0000;//çıkış sıfırlanır
+
+else
+
+ 
+
+po <= pi;//paralel giriş direk paralel çıkışa atanır
+
+end
+
+endmodule

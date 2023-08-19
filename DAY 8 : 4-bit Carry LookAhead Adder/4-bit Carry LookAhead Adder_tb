@@ -1,0 +1,39 @@
+module CLA_4Bit_Testbench;
+
+reg [3:0] A;
+reg [3:0] B;
+reg Cin;
+wire [3:0] Sum;
+wire Cout;
+
+CLA_4Bit DUT (
+    .A(A),
+    .B(B),
+    .Cin(Cin),
+    .Sum(Sum),
+    .Cout(Cout)
+);
+
+initial begin
+    $dumpfile("CLA_4Bit_Testbench.vcd");
+    $dumpvars(0, CLA_4Bit_Testbench);
+
+    A = 4'b0000;
+    B = 4'b0000;
+    Cin = 0;
+    
+    #10;
+    
+    A = 4'b0010;
+    B = 4'b1101;
+    Cin = 1;
+    
+    #10;
+
+    // Add more test cases here
+    
+    $finish;
+end
+
+endmodule
+

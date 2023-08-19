@@ -1,0 +1,34 @@
+module BCD_Synchronous_Counter (
+    input wire clk,
+    input wire reset,
+    output wire [3:0] bcd_output
+);
+    reg [3:0] count;
+    reg [3:0] bcdcounter;
+    always @(posedge clk or posedge reset) begin//her cllok veya reset bitinin yükselen kenarında aktive olur
+        if (reset)//reset biti 1 ise count sıfırlanır
+            count <= 4'b0000;
+        else
+            count <= count + 1;//reset biti 0 ise count bir artar
+    end
+
+    // Convert binary to BCD
+    always @* begin
+        case (count)//case kullanılarak her bir sayaca bcdcounter eşitlenmiştir.
+            4'b0000: bcdcounter = 4'b0000;
+            4'b0001: bcdcounter = 4'b0001;
+            4'b0010: bcdcounter = 4'b0010;
+            4'b0011: bcdcounter = 4'b0011;
+            4'b0100: bcdcounter = 4'b0100;
+            4'b0101: bcdcounter = 4'b0101;
+            4'b0110: bcdcounter = 4'b0110;
+            4'b0111: bcdcounter = 4'b0111;
+            4'b1000: bcdcounter = 4'b1000;
+            4'b1001: bcdcounter = 4'b1001;
+            4'b1010: bcdcounter = 4'b0000; // Reset to 0 after 9
+            // diğer ihtimaller eklenebilir
+            default: bcdcounter = 4'b0000; // Default case
+        endcase
+    end//case kullanılmadan da yapılabilir!
+assign bcd_output=bcdcounter;//bcd counter değeri çıkışa aktarılmıştır.
+endmodule

@@ -1,0 +1,16 @@
+`timescale 1ns/1ps;
+
+module clockdivider(clk,divide_4,rst);
+input clk,rst;//input tanımlama
+output divide_4;//output tanımlama
+reg [3:0]count;//always bloğu içinde atama yapmak için reg tanımlanmalı
+reg divide_4;
+always@(posedge clk)//clk yükselen kenarda aktive olur
+begin
+if(rst==1)//reset biti 1 gelir ise count sıfırlanır
+count=4'b0000;
+else
+count=count+1;
+divide_4=count[2];//count bitine göre 2 nin üstel fonksiyonu olarak divide yapılabilir
+end
+endmodule

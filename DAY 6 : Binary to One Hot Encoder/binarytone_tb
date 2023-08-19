@@ -1,0 +1,22 @@
+module BinaryTo8BitOneHot_Testbench;
+
+    reg [2:0] binary_input;
+    wire [7:0] one_hot_output;
+
+    BinaryTo8BitOneHot dut (
+        .binary_input(binary_input),
+        .one_hot_output(one_hot_output)
+    );
+
+    initial begin
+
+        // Iterate through all possible input combinations
+        for (binary_input = 0; binary_input < 8; binary_input = binary_input + 1) begin
+            #10;
+        end
+
+        $finish;
+    end
+
+endmodule
+

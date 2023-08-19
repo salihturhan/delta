@@ -1,0 +1,32 @@
+module tb_sr;
+parameter MSB = 16;
+reg data; 
+reg clk; 
+reg dir; 
+reg rst; 
+wire [MSB-1:0] out; 
+shift_reg #(MSB) sr0 ( .d (data),
+.clk (clk),
+.dir (dir),
+.rst (rst),
+.out (out));
+always #10 clk = ~clk;
+initial begin
+clk <= 0;
+
+dir <= 0;
+rst <= 0;
+data <= 'h1;
+end
+rst <= 0;
+#20 rst <= 1;
+repeat (7) @ (posedge clk)
+data <= ~data;
+#10 dir <= 1;
+repeat (7) @ (posedge clk)
+data <= ~data;
+repeat (7) @ (posedge clk);
+$finish;
+end
+
+endmodule

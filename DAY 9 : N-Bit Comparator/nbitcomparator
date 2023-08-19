@@ -1,0 +1,19 @@
+module NBitComparator (
+    input [2:0] A,
+    input [2:0] B,
+    output GreaterBits,
+    output EqualBits,
+    output LessBits
+);
+
+wire [2:0] GreaterBits;//2 yerine n bit yazılacak
+wire [2:0] EqualBits;
+wire [2:0] LessBits;
+// operatörler kullanılarak büyük,küçük ve ya eşitlik durumu belirlenir.
+assign GreaterBits = A > B;
+assign EqualBits = A == B;
+assign LessBits = A < B;
+
+
+endmodule
+

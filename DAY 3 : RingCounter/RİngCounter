@@ -1,0 +1,20 @@
+module RingCounter (
+    input wire clk,
+    input wire rst,
+    output wire [3:0] counter_out
+);
+
+reg [3:0] counter;
+
+always @(posedge clk or posedge rst) begin//clock veya reset sinyalinin yükselen kenarında çalışır
+    if (rst)//ring counter için sıfırlama değeri 0001'dir
+        counter <= 4'b0001;//reset biti 1 ise counter sıfırlanır
+    else
+        counter <= counter << 1;//soldan sağa bir bit öteleme işlemi yapılır
+    if (counter==4'b1000)//sayaç sona geldiğinde başa dönmesi için bir if bloğu konulmuştur
+        counter <= 4'b0001;
+end
+
+assign counter_out = counter;
+
+endmodule

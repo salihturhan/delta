@@ -1,0 +1,39 @@
+module BCD_Synchronous_Counter_Testbench;
+
+    reg clk;
+    reg reset;
+    wire [3:0] bcd_output;
+
+    // Instantiate the BCD_Synchronous_Counter module
+    BCD_Synchronous_Counter dut (
+        .clk(clk),
+        .reset(reset),
+        .bcd_output(bcd_output)
+    );
+
+    // Clock generation
+    always begin
+        #5 clk = ~clk;
+    end
+
+    initial begin
+       
+
+        // Initialize signals
+        clk = 0;
+        reset = 1;
+
+        // Reset the counter
+        #10 reset = 0;
+
+        // Test for multiple clock cycles
+        repeat (20) begin
+            #10;
+        end
+
+        // End simulation
+        $finish;
+    end
+
+endmodule
+

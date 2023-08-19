@@ -1,0 +1,22 @@
+`timescale 1ns / 1ps
+module PISO(
+    input clk,
+    input load, 
+    input [3:0] d,
+    output reg Qout);  
+
+reg [3 : 0]Q;  
+
+
+always @ (posedge clk)
+begin
+
+if ( load  ) //eğer load 1 ise input (d) değeri Q ya atanır
+  Q <= d;
+else //load 0 ise aktarım olmaz
+begin 
+  Qout <= Q[3]; //input bitlerinin her biri sıra ile Qout a aktarılır
+  Q<= { Q[2:0] , 1'b0 };
+  end
+end
+endmodule

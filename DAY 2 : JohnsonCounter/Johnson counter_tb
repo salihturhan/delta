@@ -1,0 +1,32 @@
+module j_tb_v;
+
+
+    reg Clock;
+    reg Reset;
+
+
+    wire [3:0] Count_out;
+
+
+    johnson_counter uut (
+        .Clock(Clock), 
+        .Reset(Reset), 
+        .Count_out(Count_out)
+    );
+
+    initial begin
+
+
+        Clock = 0;
+        Reset = 1;
+        #10 Reset = 0;
+        
+        #100;
+        
+
+
+    end
+
+   always #5 Clock=~Clock;
+
+endmodule

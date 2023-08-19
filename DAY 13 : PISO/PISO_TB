@@ -1,0 +1,25 @@
+`timescale 1ns / 1ps
+module PISO_tb();
+
+PISO uut(clk,load,d,Qout);
+reg clk;
+reg load;
+reg [3:0]d;
+wire Qout;
+
+initial begin
+clk=0;
+forever #5 clk = ~clk;
+end
+
+initial begin
+
+load = 1;
+d[0] = 1'b0;
+d[1] = 1'b1;
+d[2] = 1'b0;
+d[3] = 1'b1;
+#6 load = 0;
+
+end
+endmodule

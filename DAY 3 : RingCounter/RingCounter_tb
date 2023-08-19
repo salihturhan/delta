@@ -1,0 +1,30 @@
+module RingCounter_Testbench;
+
+reg clk;
+reg rst;
+wire [3:0] counter_out;
+
+// Yüzük sayıcı modülü çağrılır
+RingCounter dut (
+    .clk(clk),
+    .rst(rst),
+    .counter_out(counter_out)
+);
+
+// Saat sinyali oluşturulur
+always begin
+    #5 clk = ~clk; // 10 zaman birimi boyunca her seferinde saat sinyalini değiştir
+end
+
+// Test senaryosu
+initial begin
+    clk = 0;
+    rst = 1;
+    #20 rst = 0; // Sıfırlama sinyalini bırak
+
+
+    // Simülasyonu sonlandır
+
+end
+
+endmodule
