@@ -1,0 +1,28 @@
+module BCD_Adder(
+    input [3:0] A,          // BCD sayı A
+    input [3:0] B,          // BCD sayı B
+    output [3:0] last_sum,  // Sonuç BCD sayısı
+    output carry            // Taşıma çıkışı
+);
+    wire out;               // İç modül çıkışı
+    wire c_out;             // İç modül taşıma çıkışı
+    wire [3:0] Sum;         // Toplam değeri
+    wire [3:0] new;         // Yeni değer
+    
+    MultibitAdder adder(.a(A), .b(B), .sum(Sum), .cout(c_out)); 
+    assign x = Sum[1] & Sum[3];    // Toplamın 1. ve 3. bitleri arasında AND işlemi
+    assign y = Sum[2] & Sum[3];    // Toplamın 2. ve 3. bitleri arasında AND işlemi
+    assign carry = c_out | x | y;  // Taşıma çıkışı, iç modül taşıma çıkışlarından veya x ve y'den hesaplanır
+    assign new = {0, carry, 0};    // Yeni değer oluşturuluyor
+    
+    MultibitAdder adder2(.a(Sum), .b(new), .sum(last_sum), .cout(out)); 
+endmodule
+
+module MultibitAdder(a, b, sum, cout);
+input [3:0] a, b;          // 4 bitlik girişler
+output [3:0] sum;          // 4 bitlik toplam çıkışı
+output cout;               // Taşıma çıkışı
+    
+assign {cout, sum} = a + b; // Girişlerin toplamı hesaplanıyor ve taşıma çıkışı ile birleştiriliyor
+endmodule
+

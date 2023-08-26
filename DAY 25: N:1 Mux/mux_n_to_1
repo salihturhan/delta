@@ -1,0 +1,18 @@
+module mux4bit(a, s, o);
+    input [3:0] a;         // 4 bitlik giriş a
+    input [1:0] s;         // 2 bitlik seçim sinyali s
+    output o;              // Çıkış o
+    reg o;                 // Çıkış değeri için register
+
+    always @(a or s)       // Girişler veya seçim değiştiğinde
+    begin
+        case (s)            // Seçime göre
+            2'b00: o = a[0]; // Eğer seçim 00 ise çıkış a[0]
+            2'b01: o = a[1]; // Eğer seçim 01 ise çıkış a[1]
+            2'b10: o = a[2]; // Eğer seçim 10 ise çıkış a[2]
+            2'b11: o = a[3]; // Eğer seçim 11 ise çıkış a[3]
+            default: o = 0;   // Diğer durumlarda çıkış 0
+        endcase
+    end
+endmodule
+

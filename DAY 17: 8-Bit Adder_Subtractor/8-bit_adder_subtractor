@@ -1,0 +1,17 @@
+module eight_bit_add_sub (
+    input [7:0] A,
+    input [7:0] B,
+    input operation,
+    output reg [7:0] result
+);
+
+always @(*) begin//bir input operation alır ve bu değeri case ile kontrol eder değer 1 ise toplama değer 0 ise çıkartma yapar.Herhangi bir değer girilmezse default olarak toplama işlemi yapar.
+    case(operation)
+    1'b1 : result = A+B;
+    1'b0 : result = A-B;
+    default result=A+B;
+    endcase
+end
+
+endmodule
+

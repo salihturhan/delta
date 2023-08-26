@@ -1,0 +1,23 @@
+module bcd_to_seven_segment (
+    input [3:0] bcd,         // 4 bitlik BCD sayısı girişi
+    output reg [6:0] seven_segment  // 7 bitlik yedi segment çıkışı
+);
+
+    always @* begin
+        case (bcd)            // BCD değerine göre
+            4'b0000: seven_segment = 7'b1111110; // 0 için seven segment gösterimi
+            4'b0001: seven_segment = 7'b0110000; // 1 için seven segment gösterimi
+            4'b0010: seven_segment = 7'b1101101; // 2 için seven segment gösterimi
+            4'b0011: seven_segment = 7'b1111001; // 3 için seven segment gösterimi
+            4'b0100: seven_segment = 7'b0110011; // 4 için seven segment gösterimi
+            4'b0101: seven_segment = 7'b1011011; // 5 için seven segment gösterimi
+            4'b0110: seven_segment = 7'b1011111; // 6 için seven segment gösterimi
+            4'b0111: seven_segment = 7'b1110000; // 7 için seven segment gösterimi
+            4'b1000: seven_segment = 7'b1111111; // 8 için seven segment gösterimi
+            4'b1001: seven_segment = 7'b1111011; // 9 için seven segment gösterimi
+            default: seven_segment = 7'b0000000; // Diğer durumlarda seven segment gösterimi yok
+        endcase
+    end
+
+endmodule
+

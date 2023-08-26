@@ -1,0 +1,11 @@
+module eight_bit_subtractor (
+    input [7:0] A,
+    input [7:0] B,
+    output reg [7:0] difference
+);
+
+always @(*) begin
+    difference = A - B;//operation ile çıkartma işlemi yapılır
+end
+
+endmodule

@@ -1,0 +1,44 @@
+module full_adder (
+    input wire A,            // Giriş A
+    input wire B,            // Giriş B
+    input wire Cin,          // Taşıma girişi
+    output wire Sum,         // Toplam çıkışı
+    output wire Cout         // Taşıma çıkışı
+);
+
+    assign Sum = A ^ B ^ Cin;       // Tam toplam hesaplanıyor
+    assign Cout = (A & B) | (B & Cin) | (A & Cin);  // Taşıma çıkışı hesaplanıyor
+
+endmodule
+
+module mux_2x1 (
+    input wire S,              // Seçim girişi
+    input wire D0,             // Giriş D0
+    input wire D1,             // Giriş D1
+    output wire Y              // Çıkış Y
+);
+
+    assign Y = (S == 1'b0) ? D0 : D1;  // MUX çıkışı hesaplanıyor
+
+endmodule
+
+module carry_select_adder_4bit (
+    input wire [3:0] A,        // 4 bitlik giriş A
+    input wire [3:0] B,        // 4 bitlik giriş B
+    input wire Cin,            // Taşıma girişi
+    output wire [3:0] Sum,     // 4 bitlik toplam çıkışı
+    output wire Cout           // Taşıma çıkışı
+);
+
+    wire [3:0] C0, C1, C2, C3;   // Her aşamadan gelen taşıma çıkışları
+
+    full_adder FA0 (.A(A[0]), .B(B[0]), .Cin(Cin), .Sum(Sum[0]), .Cout(C0)); // 1. bit için tam toplama
+    full_adder FA1 (.A(A[1]), .B(B[1]), .Cin(C0), .Sum(Sum[1]), .Cout(C1)); // 2. bit için tam toplama
+    full_adder FA2 (.A(A[2]), .B(B[2]), .Cin(C1), .Sum(Sum[2]), .Cout(C2)); // 3. bit için tam toplama
+    full_adder FA3 (.A(A[3]), .B(B[3]), .Cin(C2), .Sum(Sum[3]), .Cout(C3)); // 4. bit için tam toplama
+
+    mux_2x1 MUX0 (.S(C3), .D0(C2), .D1(Sum[3]), .Y(Sum[3])); // Sonuç seçimi için MUX
+    assign Cout = C3; // Son taşıma çıkışı
+
+endmodule
+

@@ -1,0 +1,36 @@
+`timescale 1ns / 1ps
+module tb_eight_bit_add_sub;
+
+reg [7:0] A;
+reg [7:0] B;
+reg operation;
+wire [7:0] result;
+
+eight_bit_add_sub dut (
+    .A(A),
+    .B(B),
+    .operation(operation),
+    .result(result)
+);
+
+initial begin
+    A = 8'b10101010;
+    B = 8'b01010101;
+    operation = 1;
+    
+    #10 $display("A = %b, B = %b, Operation = %b, Result = %b", A, B, operation, result);
+    
+    #10;
+    
+    A = 8'b11001100;
+    B = 8'b11001100;
+    operation = 0;
+    
+    #10 $display("A = %b, B = %b, Operation = %b, Result = %b", A, B, operation, result);
+    
+    #10 $finish;
+end
+
+endmodule
+
+

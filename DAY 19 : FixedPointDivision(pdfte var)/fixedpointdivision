@@ -1,0 +1,43 @@
+module div_restoring (a, b, start, rslt);
+    input [7:0] a;            // Bölünenin değeri
+    input [3:0] b;            // Bölenin değeri
+    input start;              // Bölme işleminin başlatılmasını tetikleyen sinyal
+    output [7:0] rslt;        // Bölme sonucu
+    
+    wire [3:0] b_bar;         // Bölenin 1's complementi
+    
+    // Dahili registerlar tanımlanıyor
+    reg [3:0] b_neg;          // Bölenin 2's complementi
+    reg [7:0] rslt;           // Bölme sonucu
+    reg [3:0] count;          // Sayac değeri
+    
+    assign b_bar = ~b;        // Bölenin 1's complementi hesaplanıyor
+    
+    always @ (b_bar)
+        b_neg = b_bar + 1;    // Bölenin 2's complementi hesaplanıyor
+    
+    always @ (posedge start)   // start sinyalinin yükselen kenarı algılandığında
+    begin
+        rslt = a;             // Sonuç bölünenin değeriyle başlatılıyor
+        count = 4'b0100;      // 4 bitlik sayac 0100 değeriyle başlatılıyor
+        
+        if ((a != 0) && (b != 0)) // Eğer bölen veya bölünen sıfıra eşit değilse devam et
+            while (count)        // Sayac değeri sıfır olana kadar döngüye gir
+            begin
+                rslt = rslt << 1;                         // Sonucu bir bit sola kaydır
+                rslt = {(rslt[7:4] + b_neg), rslt[3:0]}; // Sonucun üst 4 bitine b'nin 2's complementi ekleniyor
+                
+                if (rslt[7] == 1) // Eğer sonucun en üst biti 1 ise (negatif durumu)
+                begin
+                    rslt = {(rslt[7:4] + b), rslt[3:1], 1'b0}; // Sonuçta b ekleniyor ve taşma biti temizleniyor
+                    count = count - 1; // Sayac bir azaltılıyor
+                end
+                else // Eğer sonucun en üst biti 0 ise (pozitif durumu)
+                begin
+                    rslt = {rslt[7:1], 1'b1}; // Sonucun en alt bitine 1 ekleniyor
+                    count = count - 1; // Sayac bir azaltılıyor
+                end
+            end
+    end
+endmodule
+

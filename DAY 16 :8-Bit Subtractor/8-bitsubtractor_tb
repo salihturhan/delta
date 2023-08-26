@@ -1,0 +1,27 @@
+`timescale 1ns / 1ps
+
+module tb_eight_bit_subtractor;
+
+reg [7:0] A;
+reg [7:0] B;
+wire [7:0] difference;
+
+eight_bit_subtractor dut (
+    .A(A),
+    .B(B),
+    .difference(difference)
+);
+
+initial begin
+    A = 8'b10101010;
+    B = 8'b10101010;
+    
+    #10 $display("A = %b, B = %b, Difference = %b", A, B, difference);
+    
+    
+    #10 $finish;
+end
+
+endmodule
+
+

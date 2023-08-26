@@ -1,0 +1,35 @@
+module BCD_Adder_Testbench;
+
+    reg [3:0] A;
+    reg [3:0] B;
+    wire [3:0] last_sum;
+    wire carry;
+    BCD_Adder UUT(
+        .A(A),
+        .B(B),
+        .last_sum(last_sum),
+        .carry(carry)
+    );
+    
+    initial begin
+        
+        // Test cases
+        A = 4'b0101;
+        B = 4'b0010;
+        #10;
+        
+        A = 4'b1001;
+        B = 4'b0011;
+        #10;
+        
+        A = 4'b0110;
+        B = 4'b1000;
+        #10;
+        
+        // Add more test cases here
+        
+        $finish;
+    end
+    
+endmodule
+

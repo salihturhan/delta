@@ -1,0 +1,30 @@
+module testbench;
+
+    reg [3:0] bcd;
+    wire [6:0] seven_segment;
+
+    bcd_to_seven_segment uut (
+        .bcd(bcd),
+        .seven_segment(seven_segment)
+    );
+
+    initial begin
+        $monitor("BCD: %b -> Seven-Segment: %b", bcd, seven_segment);
+
+        // Test cases
+        bcd = 4'b0000; // BCD 0
+        #10;
+
+        bcd = 4'b0001; // BCD 1
+        #10;
+
+        bcd = 4'b0010; // BCD 2
+        #10;
+
+        // Add more test cases here...
+
+        $finish;
+    end
+
+endmodule
+

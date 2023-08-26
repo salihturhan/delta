@@ -1,0 +1,19 @@
+module prbs_generator (
+    input wire clk,
+    input wire rst,
+    output  prbs
+);
+
+reg [3:0] shift_reg;
+
+always @(posedge clk or posedge rst) begin // clock ve reset bitinin yükselen kenarında aktive olur
+    if (rst)/reset biti birse tanımlanmış başlangıç değerine atanır
+        shift_reg <= 4'b1000; // Initial value
+    else
+        shift_reg <= {shift_reg[2:0], shift_reg[3] ^ shift_reg[0]};//rastgele gibi gözüken fakat belli bir noktadan sonra başa dönen bir periyotla shift registerını günceller.
+end
+
+assign prbs = shift_reg[0] ^ shift_reg[1];
+
+endmodule
+

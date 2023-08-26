@@ -1,0 +1,15 @@
+module PositiveEdgeDetector (
+    input wire clk,           // Saat sinyali
+    input wire signal,        // Giriş sinyali
+    output reg edge_detected  // Pozitif kenar algılandı mı?
+);
+
+reg signal_prev;              // Önceki giriş durumu
+
+always @(posedge clk) begin   // Saatin yükselen kenarı algılandığında
+    signal_prev <= signal;    // Önceki sinyal durumu güncelleniyor
+    edge_detected <= (signal && !signal_prev); // Pozitif kenar algılandı mı hesaplanıyor
+end
+
+endmodule
+

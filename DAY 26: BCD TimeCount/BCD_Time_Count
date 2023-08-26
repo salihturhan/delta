@@ -1,0 +1,49 @@
+module bcd_time_counter(
+    input wire clk,              // Saat sinyali
+    input wire reset,            // Sıfırlama sinyali
+    output [3:0] sec_display,    // Saniye göstergesi
+    output [3:0] min_display,    // Dakika göstergesi
+    output [3:0] hour_display    // Saat göstergesi
+);
+
+    reg [21:0] counter;  // Toplam sayıcı değeri
+    reg [3:0] seconds;   // Saniye değeri
+    reg [3:0] minutes;   // Dakika değeri
+    reg [3:0] hours;     // Saat değeri
+    
+    always @(posedge clk or posedge reset)
+    begin
+        if (reset) begin
+            counter <= 0;         // Sıfırlama durumunda sayıcıyı sıfırla
+            seconds <= 0;         // Saniye değerini sıfırla
+            minutes <= 0;         // Dakika değerini sıfırla
+            hours <= 0;           // Saat değerini sıfırla
+        end
+        else begin
+            counter <= counter + 1; // Sayıcıyı bir artır
+            
+            if (counter >= 60000) begin  // Bir dakika (60,000) geçtiğinde
+                counter <= 0;             // Sayıcıyı sıfırla
+                
+                seconds <= seconds + 1;   // Saniyeyi bir artır
+                if (seconds >= 10) begin  // Saniye 10'a ulaştığında
+                    seconds <= 0;           // Saniyeyi sıfırla
+                    minutes <= minutes + 1; // Dakikayı bir artır
+                    if (minutes >= 60) begin  // Dakika 60'a ulaştığında
+                        minutes <= 0;         // Dakikayı sıfırla
+                        hours <= hours + 1;   // Saati bir artır
+                        if (hours >= 10) begin // Saat 10'a ulaştığında
+                            hours <= 0;         // Saati sıfırla
+                        end
+                    end
+                end
+            end
+        end
+    end
+    
+    assign sec_display = seconds;  // Saniye değerini çıkışa bağla
+    assign min_display = minutes;  // Dakika değerini çıkışa bağla
+    assign hour_display = hours;    // Saat değerini çıkışa bağla
+
+endmodule
+

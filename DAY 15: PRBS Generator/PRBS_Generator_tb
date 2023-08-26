@@ -1,0 +1,28 @@
+`timescale 1ns / 1ps
+module tb_prbs_generator;
+
+reg clk;
+reg rst;
+wire prbs;
+
+prbs_generator dut (
+    .clk(clk),
+    .rst(rst),
+    .prbs(prbs)
+);
+
+initial begin
+    clk = 0;
+    rst = 1;
+    #10 rst = 0; // Release reset after 10 time units
+end
+
+always #5 clk = ~clk;
+
+initial begin
+    $monitor("Time=%0t PRBS=%b", $time, prbs);
+    #100 $finish;
+end
+
+endmodule
+

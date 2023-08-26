@@ -1,0 +1,35 @@
+module PositiveEdgeDetector_TB;
+
+reg clk;
+reg signal;
+wire edge_detected;
+
+// Instantiate the module under test
+PositiveEdgeDetector uut (
+    .clk(clk),
+    .signal(signal),
+    .edge_detected(edge_detected)
+);
+
+// Clock generation
+always #5 clk = ~clk;
+
+initial begin
+    clk = 0;
+    signal = 0;
+    
+    // Apply a test sequence
+    #10 signal = 1;
+    #10 signal = 0;
+    #10 signal = 1;
+    #10 signal = 1;
+    #10 signal = 0;
+    #10 signal = 0;
+    #10 signal = 1;
+    #10 signal = 0;
+    
+    $finish;
+end
+
+endmodule
+

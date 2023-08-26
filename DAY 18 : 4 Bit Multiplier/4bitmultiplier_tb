@@ -1,0 +1,36 @@
+`timescale 1ns / 1ps
+module multiplier_4bit_tb;
+
+reg [3:0] a;
+reg [3:0] b;
+wire [7:0] p;
+
+// Instantiate the multiplier module
+array4x4 uut (
+    .a(a),
+    .b(b),
+    .p(p)
+);
+
+// Clock generation
+reg clk = 0;
+always #5 clk = ~clk;
+
+// Test vectors
+initial begin
+    $dumpfile("multiplier_4bit_tb.vcd");
+    $dumpvars(0, multiplier_4bit_tb);
+
+    a = 4'b0010; // A = 2
+    b = 4'b0011; // B = 3
+
+    #10; // Wait for a few clock cycles
+
+
+
+    #10;
+    $finish;
+end
+
+endmodule
+

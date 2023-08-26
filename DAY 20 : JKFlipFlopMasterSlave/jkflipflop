@@ -1,0 +1,38 @@
+
+
+module jk_ff (
+    input j,            // J girişi
+    input k,            // K girişi
+    input clk,          // Saat sinyali
+    output q,           // Q çıkışı
+    output qq           // Q'nun complementi çıkışı
+);
+    reg q;              // Q çıkışı için register
+    assign qq = ~q;     // Q'nun complementi hesaplanıyor
+    
+    always @(posedge clk)
+        case ({j, k})
+            2'b00 : q <= q;        // Durum 00 ise çıkış değişmez
+            2'b01 : q <= 0;        // Durum 01 ise Q sıfıra set edilir
+            2'b10 : q <= 1;        // Durum 10 ise Q bir'e set edilir
+            2'b11 : q <= ~q;       // Durum 11 ise Q'nun değeri ters çevrilir
+        endcase
+endmodule
+
+module master_slave (
+    input s,                // Set girişi
+    input r,                // Reset girişi
+    input clk,              // Saat sinyali
+    output qn,              // Q'nun complementi çıkışı
+    output qn_bar           // Q çıkışı
+);
+    wire mq;                // Master JK flip-flopun Q çıkışı
+    wire mq_bar;            // Master JK flip-flopun Q'nun complementi çıkışı
+    wire mclk;              // Saatin tersi
+    
+    assign mclk = ~clk;     // Saatin tersi hesaplanıyor
+    
+    jk_ff Master(s, r, clk, mq, mq_bar);    // Master JK flip-flop modülü çağrılıyor
+    jk_ff Slave(mq, mq_bar, mclk, qn, qn_bar);   // Slave JK flip-flop modülü çağrılıyor
+endmodule
+

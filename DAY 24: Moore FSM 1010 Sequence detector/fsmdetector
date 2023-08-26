@@ -1,0 +1,48 @@
+module seq_detector(
+    input x, clk, reset,     // Giriş sinyalleri: x, saat (clk), sıfırlama (reset)
+    output reg z             // Çıkış sinyali: z
+);
+
+parameter S0 = 0, S1 = 1, S2 = 2, S3 = 3, S4 = 4;  // Durum değerleri
+reg [2:0] PS, NS;           // Mevcut durum (Previous State) ve yeni durum (Next State)
+
+always @(posedge clk or posedge reset)
+begin
+    if (reset)
+        PS <= S0;            // Sıfırlama durumunda mevcut durumu S0 olarak ayarla
+    else
+        PS <= NS;             // Diğer durumlarda mevcut durumu yeni duruma eşitle
+end
+
+always @(PS, x)
+begin
+    case (PS)
+        S0 : begin
+            NS = x ? S1 : S0;  // Duruma göre yeni durumu belirle (S0).Eğer x==1 ise S1 durumuna geçiş yapar.
+        end
+        S1 : begin
+            NS = x ? S1 : S2;  // Duruma göre yeni durumu belirle (S1)Eğer x==0 ise S2 durumuna geçiş yapar.
+        end
+        S2 : begin
+            NS = x ? S3 : S0;  // Duruma göre yeni durumu belirle (S2)Eğer x==1 ise S3 durumuna geçiş yapar.
+        end
+        S3 : begin
+            NS = x ? S2 : S4;  // Duruma göre yeni durumu belirle (S3)Eğer x==0 ise S4 durumuna geçiş yapar.
+        end
+        S4 : begin
+            NS = x ? S1 : S2;  // Duruma göre yeni durumu belirle (S4)Eğer x==1 ise S1 durumuna geçiş yapar.
+        end
+        default: NS = S0;      // Varsayılan durum S0
+    endcase
+end
+
+always @(PS)
+begin
+    case (PS)
+        S4: z = 1;             // Durum S4 ise çıkışı z'yi 1 yap
+        default: z = 0;        // Diğer durumlarda çıkışı z'yi 0 yap
+    endcase
+end
+
+endmodule
+

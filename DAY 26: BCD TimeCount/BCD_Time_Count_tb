@@ -1,0 +1,39 @@
+module bcd_time_counter_tb;
+
+    reg clk;
+    reg reset;
+    wire [3:0] sec_display;
+    wire [3:0] min_display;
+    wire [3:0] hour_display;
+    
+    // Clock generation
+    always begin
+        #5 clk = ~clk;
+    end
+    
+    initial begin
+        clk = 0;
+        reset = 0;
+        
+        #10 reset = 1; // Sıfırlama sinyalini etkinleştir
+        #20 reset = 0; // Sıfırlama sinyalini devre dışı bırak
+        
+        // Simülasyon süresi boyunca saat çalıştırma
+        repeat (120000) begin
+            #5;
+        end
+        
+        $finish; // Simülasyonu bitir
+    end
+    
+    // Instantiate the bcd_time_counter module
+    bcd_time_counter counter_inst (
+        .clk(clk),
+        .reset(reset),
+        .sec_display(sec_display),
+        .min_display(min_display),
+        .hour_display(hour_display)
+    );
+    
+endmodule
+
