@@ -1,0 +1,41 @@
+module mux_2x1 (
+    input wire sel,    // Seçim girişi
+    input wire d0,     // Veri girişi 0
+    input wire d1,     // Veri girişi 1
+    output wire y      // Çıkış
+);
+
+    assign y = (sel) ? d1 : d0; // Çıkış, seçim yüksekse d1'i, aksi takdirde d0'ı seçer
+
+endmodule
+
+module d_flip_flop (
+    input wire clk,    // Saat girişi
+    input wire reset,  // Sıfırlama girişi
+    input wire d,      // Veri girişi
+    output reg q       // Çıkış
+);
+
+    always @(posedge clk or posedge reset) begin
+        if (reset)
+            q <= 1'b0;   // Sıfırlama etkin olduğunda çıkışı sıfırla
+        else
+            q <= d;       // Pozitif saat kenarı algılandığında çıkışı giriş verisiyle güncelle
+    end
+
+endmodule
+
+module cn_flipflop(c,n,clk,q,qbar);
+input c,n,clk;
+output q,qbar;
+wire cn,n_bar,d_wire;
+
+mux_2x1 mux1(1'b0,c,n,cn);    // cn ve n_bar'ı oluşturmak için çoklayıcıları kullan
+mux_2x1 mux2(1'b1,1'b0,n,n_bar);
+mux_2x1 mux3(cn,n_bar,q,d_wire);  // d_flip_flop için giriş verisini oluştur
+
+d_flip_flop dff1( .d(d_wire),.clk(clk),.reset(),.q(q)); // d_flip_flop'u tanımla
+assign qbar=~q; // qbar'ı çıkışa tanımla
+
+endmodule
+

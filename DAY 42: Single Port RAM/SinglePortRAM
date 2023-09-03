@@ -1,0 +1,30 @@
+module single_port_ram
+(
+	input [7:0] data,   // Veri girişi
+	input [5:0] addr,   // Adres girişi (0-63)
+	input we,           // Yazma etkinleştirme sinyali
+	input clk,          // Saat sinyali
+	output [7:0] q     // Veri çıkışı
+);
+
+	// RAM belleği için 8-bit genişliğinde 64 hücreli bir dizi tanımlanır.
+	reg [7:0] ram[63:0];
+	
+	// Okuma işlemi sırasında kullanılmak üzere adresi kaydeden bir değişken.
+	reg [5:0] addr_reg;
+	
+	always @ (posedge clk)
+	begin
+		// Yazma işlemi (we etkinleştirilmişse)
+		if (we)
+			ram[addr] <= data; // Belirtilen adrese veriyi yaz
+		
+		addr_reg <= addr; // Adresi kaydet
+	end
+		
+	// Sürekli atama, okuma işleminin HER ZAMAN YENİ veri döndüreceği anlamına gelir.
+	// Bu, Single Port modundaki TriMatrix bellek bloklarının doğal davranışıdır.  
+	assign q = ram[addr_reg]; // Belirtilen adresten veriyi oku ve q'ya ata
+	
+endmodule
+

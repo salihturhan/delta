@@ -1,0 +1,40 @@
+module GCD_Calculator_tb;
+
+  reg clk;       // Clock sinyali
+  reg reset;     // Reset sinyali
+  reg start;     // Başlatma sinyali
+  reg [6:0] num1, num2;
+  wire [6:0] gcd;
+  wire done;
+  GCD_Calculator uut (
+      .clk(clk),
+      .reset(reset),
+      .start(start),
+      .num1(num1),
+      .num2(num2),
+      .gcd(gcd),
+      .done(done)
+    );
+  // Clock sinyalini oluştur
+  always begin
+    #5 clk = ~clk;
+  end
+
+  // Reset ve başlatma sinyallerini ayarla
+  initial begin
+    clk = 0;
+    reset = 1;
+    start = 0;
+    #10 reset = 0;
+    #10 start = 1;
+
+    // İlk değerleri ayarlayın
+    num1 = 36;
+    num2 = 12;
+
+    
+    $finish;
+  end
+
+endmodule
+

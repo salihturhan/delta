@@ -1,0 +1,39 @@
+module d_latch_using_mux (
+    input D,       // Giriş verisi (Data)
+    input enable,  // Enable sinyali
+    input clk,     // Saat sinyali
+    output reg Q   // Çıkış verisi
+);
+
+    wire mux_input;  // Mux giriş sinyali
+    
+    // 2x1 Mux yapısını oluştur
+    mux_2x1 mux (
+        .S(enable),    // Mux seçim sinyali (Enable)
+        .D0(Q),        // Birinci giriş (Çıkış Q)
+        .D1(D),        // İkinci giriş (Veri girişi D)
+        .Y(mux_input)  // Mux çıkış sinyali
+    );
+    
+    // Her pozitif saat kenarında çalışır
+    always @(posedge clk) begin
+        if (enable)
+            Q <= mux_input;  // Enable aktifse çıkış Q'yu güncelle
+        else
+            Q <= Q;          // Enable devre dışıysa çıkış Q'yu koru
+    end
+    
+endmodule
+
+// 2x1 Mux modülü
+module mux_2x1 (
+    input wire S,     // Mux seçim sinyali
+    input wire D0,    // Birinci giriş
+    input wire D1,    // İkinci giriş
+    output wire Y     // Mux çıkışı
+);
+
+    assign Y = (S == 1'b0) ? D0 : D1;  // Mux çıkışını belirle
+
+endmodule
+

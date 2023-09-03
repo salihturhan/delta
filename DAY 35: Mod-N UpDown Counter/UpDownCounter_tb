@@ -1,0 +1,47 @@
+`timescale 1ns / 1ps
+
+module testbench;
+
+reg clk;
+reg reset;
+reg up;
+reg down;
+wire [3:0] count;
+
+// Instantiate the modN_counter module
+modN_counter dut(
+    .clk(clk),
+    .reset(reset),
+    .up(up),
+    .down(down),
+    .count(count)
+);
+
+// Clock generation
+always begin
+    #5 clk = ~clk;
+end
+
+// Initialize signals
+initial begin
+    clk = 0;
+    reset = 1;
+    up = 0;
+    down = 0;
+    #10 reset = 0; // Release reset after 10 time units
+    #20 up = 1;    // Start counting up
+    #100 up = 0;    // Stop counting up
+    #40 down = 1;  // Start counting down
+   
+end
+
+// Monitor to display the count
+always @(count)
+    $display("Count: %b", count);
+
+// Simulation duration
+initial
+    #100 $finish;
+
+endmodule
+

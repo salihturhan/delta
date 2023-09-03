@@ -1,0 +1,58 @@
+module testbench;
+
+reg clk;
+reg rst;
+reg shift_right;
+reg shift_left;
+reg [3:0] data_in;
+wire [3:0] data_out;
+
+// Universal Shift Register modülünü çağırmak
+Universal_Shift_Register uut (
+    .clk(clk),
+    .rst(rst),
+    .shift_right(shift_right),
+    .shift_left(shift_left),
+    .data_in(data_in),
+    .data_out(data_out)
+);
+
+// Clock jenerasyonu
+always begin
+    #5 clk = ~clk;
+end
+
+// Test senaryosu
+initial begin
+    clk = 0;
+    rst = 1;
+    shift_right = 0;
+    shift_left = 0;
+    data_in = 4'b0000;
+
+    // Sıfırlama ve giriş verileri hazırlık aşaması
+    #10 rst = 0;
+    #10 data_in = 4'b1010;
+
+    // Sağa kaydırma testi
+    #10 shift_right = 1;
+    #10;
+    #10;shift_right = 0;
+    #10  rst = 1;
+    #10 rst = 0;
+    // Sola kaydırma testi
+     #10;shift_left = 1;
+    #10;
+     #10;shift_left = 0;
+
+    // Yeni giriş verisi ve doğrulama
+    data_in = 4'b0110;
+    #20;
+    
+    $display("Data Out: %b", data_out);
+
+    $finish;
+end
+
+endmodule
+

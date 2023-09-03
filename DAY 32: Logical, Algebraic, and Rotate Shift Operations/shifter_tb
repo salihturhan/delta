@@ -1,0 +1,59 @@
+module alu_testbench;
+
+    reg [7:0] operandA;
+    reg [2:0] opcode;
+    wire [7:0] result;
+
+    alu uut (
+        .operandA(operandA),
+        .opcode(opcode),
+        .result(result)
+    );
+
+    initial begin
+
+
+        operandA = 8'b11011010;
+        opcode =   3'b000; // Logical Left Shift
+        #10;
+
+
+
+        operandA = 8'b10101010;
+
+        opcode = 3'b001; // Logical Right Shift
+        #10;
+
+
+
+        operandA = 8'b11001100;
+
+        opcode = 3'b010;// Algebraic Right left
+        #10;
+
+
+
+        operandA = 8'b10110101;
+
+        opcode = 3'b011; // Algebraic Right Shift
+        #10;
+
+        operandA = 8'b11001100;
+
+        opcode = 3'b101; //Rotate right 
+        #10;
+
+
+
+        operandA = 8'b10110101;
+
+        opcode = 3'b110;//Rotate right 
+        #10;
+
+     
+       
+        $finish;
+    end
+
+endmodule
+

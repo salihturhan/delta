@@ -1,0 +1,44 @@
+module barrel_shifter_8bit_tb;
+
+    reg [7:0] data_in;
+    reg [2:0] shift_amount;
+    reg direction;
+    wire [7:0] data_out;
+    
+    // Clock generation
+    reg clk;
+    always begin
+        #5 clk = ~clk;
+    end
+    
+    initial begin
+        clk = 0;
+        data_in = 8'b11001100; // Örnek giriş verisi
+        shift_amount = 3'b001; // Kaydırma miktarı: 1
+        direction = 1'b0;      // Kaydırma yönü: Sağa
+        
+        // Test 1: Sağa 1 bit kaydırma
+        #10 shift_amount = 3'b001;
+        #20
+        
+        // Test 2: Sola 2 bit kaydırma
+        #10 shift_amount = 3'b010;
+        #20 direction = 1'b1;
+        
+        // Test 3: Sağa 3 bit kaydırma
+        #10 shift_amount = 3'b011;
+        #20 direction = 1'b0;
+        
+        $finish; // Simülasyonu bitir
+    end
+    
+    // Instantiate the barrel_shifter_8bit module
+    barrel_shifter_8bit shifter_inst (
+        .data_in(data_in),
+        .shift_amount(shift_amount),
+        .direction(direction),
+        .data_out(data_out)
+    );
+    
+endmodule
+

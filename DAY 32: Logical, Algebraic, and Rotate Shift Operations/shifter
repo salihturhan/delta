@@ -1,0 +1,33 @@
+module alu(
+    input wire [7:0] operandA, // 8-bit giriş verisi
+    input wire [2:0] opcode,   // 3-bit opcode işlem seçimi için
+    output wire [7:0] result   // 8-bit sonuç verisi
+);
+
+    reg [7:0] shifted_result; // Kaydırılmış sonuç
+
+    always @(*) begin
+        case (opcode)
+            3'b000: // Mantıksal Sol Kaydırma (Logical Left Shift)
+                shifted_result = operandA << 1;
+            3'b001: // Mantıksal Sağ Kaydırma (Logical Right Shift)
+                shifted_result = operandA >> 1 ;
+            
+            3'b010: // Cebirsel Sol Kaydırma (Arithmetic Left Shift)
+                shifted_result = operandA << 1;
+            3'b011: // Cebirsel Sağ Kaydırma (Arithmetic Right Shift)
+                shifted_result = operandA >>> 1;
+        
+            3'b101: // Saat yönünde dairesel kaydırma (Rotate Right)
+                shifted_result = {operandA[0], operandA[7:1]};
+            3'b110: // Saat yönünde dairesel kaydırma (Rotate Left)
+                shifted_result = {operandA[6:0], operandA[7]};
+            default:
+                shifted_result = 8'h00; // Varsayılan olarak sıfır
+        endcase
+    end
+
+    assign result = shifted_result; // Sonucu çıkışa atanır
+
+endmodule
+

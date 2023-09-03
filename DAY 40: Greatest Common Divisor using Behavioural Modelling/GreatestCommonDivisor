@@ -1,0 +1,20 @@
+module GCD_Calculator(
+  input [6:0] num1, num2,  // Giriş numaraları
+  output reg [6:0] gcd    // En büyük ortak bölen
+);
+
+reg [6:0] a, b, temp;
+
+always @(*) begin
+  a = num1;  // a'yı num1'e eşitle
+  b = num2;  // b'yi num2'ye eşitle
+  while (b != 0) begin
+    temp = b;     // Geçici olarak b'yi sakla
+    b = a % b;    // b'yi a'ya göre modunu al
+    a = temp;     // a'ya geçici değeri atla
+  end
+  gcd = a;        // Son a değeri, en büyük ortak böleni temsil eder
+end
+
+endmodule
+

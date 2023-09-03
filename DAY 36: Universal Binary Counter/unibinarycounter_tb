@@ -1,0 +1,22 @@
+module univcounttstbnch;
+reg rst,modsel,clk;
+wire [3:0]q;
+univcount cnt (rst,clk,q,modsel);
+
+initial
+begin
+clk=0;
+rst = 0;
+modsel= 0;
+
+$monitor($time, ,"c=%b",clk, ,"r=%b",rst, ,"M=%b",modsel, ,"q=%b",q);
+#3 rst=1;
+#9 modsel=0;
+#23 modsel = 1;
+
+end
+
+always #1 clk = ~clk;
+initial #69 $finish;
+
+endmodule

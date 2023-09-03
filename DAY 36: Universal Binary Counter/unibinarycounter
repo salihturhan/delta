@@ -1,0 +1,27 @@
+module univcount (Resetn, Clock, Q, modsel);
+    input Resetn;         // Sıfırlama sinyali (negatif mantık)
+    input Clock;          // Saat sinyali
+    input modsel;         // Sayma yönü seçimi
+    output [3:0] Q;       // 4-bit sayıcı çıkışı
+    reg [3:0] Q;          // 4-bit sayıcı
+    
+    always @(posedge Clock) begin
+        if (!Resetn)
+            Q <= 4'b0000; // Sıfırlama etkinleştirildiğinde sayıcıyı sıfırla
+        else if (modsel == 0) begin
+            // Sayma yönü: Yukarı
+            if (Q == 4'b1111)
+                Q <= 4'b0000; // 15'ten 0'a dön
+            else
+                Q <= Q + 1; // Bir artır
+        end
+        else begin
+            // Sayma yönü: Aşağı
+            if (Q == 4'b0000)
+                Q <= 4'b1111; // 0'dan 15'e dön
+            else
+                Q <= Q - 1; // Bir azalt
+        end
+    end
+endmodule
+

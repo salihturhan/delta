@@ -1,0 +1,61 @@
+`timescale 1ns/1ns
+
+module single_port_ram_tb;
+
+	// Declare signals for connecting to the DUT (Device Under Test)
+	reg [7:0] data;
+	reg [5:0] addr;
+	reg we, clk;
+	wire [7:0] q;
+	
+	// Instantiate the single port RAM module
+	single_port_ram uut (
+		.data(data),
+		.addr(addr),
+		.we(we),
+		.clk(clk),
+		.q(q)
+	);
+	
+	// Define clock parameters
+	reg clk_enable = 0;
+	always #5 clk = ~clk;
+	always #10 clk_enable = ~clk_enable;
+	
+	// Initializations
+	initial begin
+		// Initialize signals
+		data = 8'h00;
+		addr = 6'b000000;
+		we = 0;
+		clk = 0;
+		
+		// Write some data to the RAM
+		we = 1;
+		data = 8'h42;
+		addr = 6'b001010;
+		#20; // Wait for a few clock cycles
+		
+		// Read data from the RAM
+		we = 0;
+		addr = 6'b001010;
+		#20; // Wait for a few clock cycles
+		
+		// Check the output
+		if (q === 8'h42) begin
+			$display("RAM Read Test Passed!");
+		end else begin
+			$display("RAM Read Test Failed!");
+		end
+		
+		$finish;
+	end
+	
+	// Stimulate the clock
+	always begin
+		#5 clk_enable = 1;
+		#5 clk_enable = 0;
+	end
+
+endmodule
+

@@ -1,0 +1,41 @@
+module mux4X1(
+    input in0, in1, in2, in3,
+    input s1, s0,
+    output out
+);
+    assign out = s1 ? (s0 ? in3 : in2) : (s0 ? in1 : in0);
+endmodule
+
+module comparator(
+    input a, b,
+    output greater, lesser, equal
+);
+    wire greater_w, lesser_w, equal_w;
+    // mux için select bitleri karşılaştırmak istediğimiz bitler olarak ayarlanır.MUX için inputlar select bitlerini karşılaştıracak şekilde ayarlanmıştır.Örneğin a < b için eğer a=1 ise b bitinin ne olduğu önemsiz olarak çıkış direkt 0 olarak atanır.
+    // Mux1: a < b (lesser)
+    mux4X1 mux1(
+        .in0(1'b0), .in1(1'b1), .in2(1'b0), .in3(1'b0),
+        .s1(a), .s0(b),
+        .out(lesser_w)
+    );
+
+    // Mux2: a == b (equal)
+    mux4X1 mux2(
+        .in0(1'b1), .in1(1'b0), .in2(1'b0), .in3(1'b1),
+        .s1(a), .s0(b),
+        .out(equal_w)
+    );
+
+    // Mux3: a > b (greater)
+    mux4X1 mux3(
+        .in0(1'b0), .in1(1'b0), .in2(1'b1), .in3(1'b0),
+        .s1(a), .s0(b),
+        .out(greater_w)
+    );
+
+    // Karşılaştırma sonuçlarını çıkışlara yönlendir
+    assign lesser = lesser_w;
+    assign equal = equal_w;
+    assign greater = greater_w;
+endmodule
+

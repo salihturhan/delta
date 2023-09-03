@@ -1,0 +1,45 @@
+module GCD_Calculator_TB;
+
+  // Düğümüzün sinyalleri
+  reg [6:0] num1, num2;
+  wire [6:0] gcd;
+
+  // Düğümüzü çağırın
+  GCD_Calculator gcd_calculator (
+    .num1(num1),
+    .num2(num2),
+    .gcd(gcd)
+  );
+
+  // Test işlemi
+  initial begin
+    // Test değerlerini ayarla
+    num1 = 12; // İlk sayı
+    num2 = 18; // İkinci sayı
+
+    // Bekleme
+    #10;
+     num1 = 20; // İlk sayı
+    num2 = 15; // İkinci sayı
+
+    // Bekleme
+    #10;
+     num1 = 36; // İlk sayı
+    num2 = 18; // İkinci sayı
+
+    // Bekleme
+    #10;
+
+    // Sonucu kontrol et
+    if (gcd == 6) begin
+      $display("Test başarılı: %d ve %d'nin en büyük ortak böleni %d'dir.", num1, num2, gcd);
+    end else begin
+      $display("Test başarısız: %d ve %d'nin en büyük ortak böleni %d değil, beklenen sonuç 6.", num1, num2, gcd);
+    end
+
+    // Simülasyonu sonlandır
+    $finish;
+  end
+
+endmodule
+

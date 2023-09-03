@@ -1,0 +1,29 @@
+module clock_divide_9 (
+    input wire ref_clk,   // Referans saat sinyali
+    input wire rstb,      // Sıfırlama sinyali (negatif mantık)
+    output reg clk_out    // Bölünmüş saat sinyali
+);
+
+    reg [3:0] cnt;  // 4-bit sayıcı
+
+    // Sayıcıyı her yükselen kenarında güncelle ve sıfırlama durumunda sıfırla
+    always @ (posedge ref_clk or negedge rstb) begin
+        if (~rstb)
+            cnt <= 0;  // Sıfırlama etkin olduğunda sayıcıyı sıfırla
+        else
+            cnt <= (cnt == 8) ? 0 : cnt + 1;  // Sayıcıyı 0 ile 8 arasında döngüsel olarak artır
+    end
+
+
+    always @ (posedge ref_clk or negedge rstb) begin
+        if (~rstb)
+            clk_out <= 0;  // Sıfırlama etkin olduğunda çıkışı sıfırla
+        else begin
+            clk_out <= 0;
+            if (cnt >= 2)
+                clk_out <= 1;  // Sayıcı değeri 2 veya daha büyükse çıkışı yüksek yap
+        end
+    end
+
+endmodule
+

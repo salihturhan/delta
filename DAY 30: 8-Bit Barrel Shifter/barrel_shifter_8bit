@@ -1,0 +1,21 @@
+module barrel_shifter_8bit (
+    input [7:0] data_in,      // 8-bit giriş verisi
+    input [2:0] shift_amount, // Kaydırma miktarı (0-7)
+    input direction,          // Kaydırma yönü (0: sağa, 1: sola)
+    output reg [7:0] data_out // 8-bit çıkış verisi
+);
+
+    reg [7:0] temp_data; // Geçici veri saklayıcısı
+    
+    always @* begin
+        if (direction == 1'b0) // Sağa kaydırma
+            temp_data = data_in >> shift_amount;
+        else // Sola kaydırma
+            temp_data = data_in << shift_amount;
+    end
+    
+    always @(posedge direction or posedge shift_amount or posedge data_in)
+        data_out <= temp_data; // Sonuç çıkışa aktarılır
+
+endmodule
+

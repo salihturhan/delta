@@ -1,0 +1,48 @@
+module GCD_Calculator(
+  input wire clk,     // Clock sinyali
+  input wire reset,   // Reset sinyali
+  input wire start,   // Başlatma sinyali
+  input wire [6:0] num1, num2,   // Giriş numaraları
+  output reg [6:0] gcd,          // En büyük ortak bölen
+  output reg done                // Hesaplama tamamlandı sinyali
+);
+
+reg [6:0] a, b, temp;   // Geçici saklama alanları
+reg updating, computing; // Durum kontrol sinyalleri
+
+always @(posedge clk or posedge reset) begin
+  if (reset) begin
+    a <= 0;
+    b <= 0;
+    temp <= 0;
+    gcd <= 0;
+    done <= 0;
+    updating <= 0;
+    computing <= 0;
+  end else begin
+    if (start && !updating && !computing) begin
+      a <= num1;              // a'yı num1'e eşitle
+      b <= num2;              // b'yi num2'ye eşitle
+      updating <= 1;          // Güncelleme başladı
+    end
+    
+    if (updating) begin
+      temp <= b;              // Geçici olarak b'yi sakla
+      b <= a % b;             // b'yi a'ya göre modunu al
+      a <= temp;              // a'ya geçici değeri atla
+      if (b == 0) begin
+        updating <= 0;        // Güncelleme tamamlandı
+        computing <= 1;       // Hesaplama başladı
+      end
+    end
+    
+    if (computing) begin
+      gcd <= a;               // Son a değeri, en büyük ortak böleni temsil eder
+      done <= 1;              // Hesaplama tamamlandı
+      computing <= 0;         // Hesaplama tamamlandı
+    end
+  end
+end
+
+endmodule
+

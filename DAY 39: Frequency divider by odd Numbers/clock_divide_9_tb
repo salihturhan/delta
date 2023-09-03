@@ -1,0 +1,36 @@
+module tb_clock_divide_9;
+
+  reg ref_clk;
+  reg rstb;
+  wire clk_out;
+
+  // Instantiate the clock_divide_9 module
+  clock_divide_9 uut (
+    .ref_clk(ref_clk),
+    .rstb(rstb),
+    .clk_out(clk_out)
+  );
+
+  // Generate reference clock
+  always #5 ref_clk = ~ref_clk;
+
+  initial begin
+    // Initialize signals
+    ref_clk = 0;
+    rstb = 0;
+    #10; // Wait for a few cycles to stabilize
+
+    // Release reset
+    rstb = 1;
+    #10;
+
+    // Simulate behavior
+    repeat (40) begin
+      #10; // Wait for a rising edge of the reference clock
+    end
+
+    $finish; // End simulation
+  end
+
+endmodule
+

@@ -1,0 +1,18 @@
+module async_down_counter(
+    input wire clk,          // Saat sinyali
+    input wire rst,          // Asenkron sıfırlama sinyali
+    output wire [3:0] count  // 4-bit sayıcı değeri
+);
+
+    reg [3:0] count; // 4-bit sayıcı değeri
+    
+    // Her pozitif saat kenarında veya pozitif sıfırlama kenarında çalışır
+    always @(posedge clk or posedge rst) begin
+        if (rst)
+            count <= 4'b0000; // Sıfırlama etkinse sayıcıyı sıfırla
+        else
+            count <= count - 1; // Sıfırlama devre dışıysa sayıcıyı azalt
+    end
+
+endmodule
+

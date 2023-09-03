@@ -1,0 +1,35 @@
+`timescale 1ns / 1ps
+
+module modN_counter (
+    input clk,             // Saat sinyali
+    input reset,           // Sıfırlama sinyali
+    input up,              // Yukarı sayma modunu etkinleştirme sinyali
+    input down,            // Aşağı sayma modunu etkinleştirme sinyali
+    output reg [WIDTH-1:0] count // Sayıcı değeri
+);
+    // Parametrelerle özelleştirilebilir
+    parameter N = 10;      // Modulus değeri (sayma sınırı)
+    parameter WIDTH = 4;    // Sayıcı genişliği (bit sayısı)
+
+    always @(posedge clk) begin
+        if (reset == 1)
+            count <= 0; // Sıfırlama etkinleştirildiğinde sayıcıyı sıfırla
+
+        if (up == 1) begin
+            // Yukarı sayma modu seçildiğinde
+            if (count == N-1)
+                count <= 0; // Sayma sınırına ulaşıldığında sıfırla
+            else
+                count <= count + 1; // Sayıcıyı bir artır
+        end
+
+        if (down == 1) begin
+            // Aşağı sayma modu seçildiğinde
+            if (count == 0)
+                count <= N-1; // Sayma sınırında ise N-1'e dön
+            else
+                count <= count - 1; // Sayıcıyı bir azalt
+        end
+    end
+endmodule
+
