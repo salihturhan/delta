@@ -1,0 +1,43 @@
+
+module Dualport(
+    input  clk,           // Clock sinyali
+    input  rst,           // Sıfırlama sinyali
+    input  [3:0] write_addr0,  // Okuma bağlantı noktası 1 adresi (4-bit)
+    input  [3:0] write_addr1,  // Okuma bağlantı noktası 2 adresi (4-bit)
+    input  write_enable,   // Yazma etkinleştirme sinyali
+    input  [7:0] data_in,   // Veri girişi (8-bit)
+    input  port_en_0,
+    input  port_en_1,
+    output wire [7:0] data_out0, // Okuma bağlantı noktası 1 için veri çıkışı (8-bit)
+    output wire [7:0] data_out1  // Okuma bağlantı noktası 2 için veri çıkışı (8-bit)
+);
+reg [7:0] memory [0:15]; // 16x8 çift bağlantı noktalı RAM
+integer i;
+always @(posedge clk ) begin
+    if (rst) begin
+        // RAM'i tüm sıfırlara sıfırlayın
+        for (i = 0; i < 16; i = i + 1) begin
+            memory[i] <= 8'b00000000;
+        end
+    end else begin
+        if(port_en_0==1 & write_enable==1)begin
+            // Bağlantı noktası 1 etkin ve yazma etkinleştirildiğinde
+            // veriyi belirtilen adrese yazın
+            memory[write_addr0]<=data_in;
+         end
+        if(port_en_1==1 & write_enable==1)begin
+            // Bağlantı noktası 2 etkin ve yazma etkinleştirildiğinde
+            // veriyi belirtilen adrese yazın
+            memory[write_addr1]<=data_in;
+         end 
+     end
+end
+
+// Bağlantı noktası 1 için veri çıkışını belirleyin, etkin değilse sıfır yapın
+assign data_out0=port_en_0 ? memory[write_addr0] : 8'b00000000;
+
+// Bağlantı noktası 2 için veri çıkışını belirleyin, etkin değilse sıfır yapın
+assign data_out1=port_en_1 ? memory[write_addr1] : 8'b00000000;
+
+endmodule
+

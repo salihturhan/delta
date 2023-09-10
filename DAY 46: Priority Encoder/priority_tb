@@ -1,0 +1,36 @@
+module pri_en_tb();
+reg [7:0] data;
+reg en;
+wire [2:0] x;
+reg clk;
+
+pri_en dut(data,x,en,clk);
+always begin
+        #5 clk = ~clk; // Toggle the clock every 5 time units
+end
+initial
+begin
+clk=0;
+en=1'b1;  
+data=8'b00000001; #10;
+data=8'b00000011; #10;
+data=8'b00000101; #10;
+data=8'b00001001; #10;
+data=8'b00010001; #10;
+data=8'b00110001; #10;
+data=8'b01110001; #10;
+data=8'b11001001; #10;
+
+ data=8'b10111001;#10
+ data=8'b00101010;#10
+ data=8'b00000001;#10
+
+
+#10 data=8'b10100010;
+ #100 $finish;
+end
+
+
+
+ 
+ endmodule

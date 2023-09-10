@@ -1,0 +1,16 @@
+module clock_buffer_tb();
+reg mclk;
+wire bclk;
+
+clock_buffer dut(mclk,bclk);
+initial begin
+    mclk=1;#10
+    mclk=0;#10
+    mclk=1;#10
+    mclk=0;#10
+    mclk=1;#10
+    mclk=0;#10
+    mclk=1;#10
+    mclk=0;#10;
+    end
+endmodule

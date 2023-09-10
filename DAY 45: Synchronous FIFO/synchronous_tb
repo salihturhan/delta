@@ -1,0 +1,56 @@
+module tb_simple_fifo;
+
+reg clk;
+reg reset;
+reg wr_en;
+reg rd_en;
+reg [7:0] data_in;
+wire [7:0] data_out;
+wire full;
+wire empty;
+
+// Instantiate the FIFO module
+simple_fifo fifo_inst (
+    .data_out(data_out),
+    .full(full),
+    .empty(empty),
+    .data_in(data_in),
+    .clk(clk),
+    .reset(reset)
+);
+
+// Clock generation
+always begin
+    #5 clk = ~clk; // Toggle the clock every 5 time units
+end
+integer i;
+// Testbench stimulus
+initial begin
+    clk = 0;
+    reset = 0;
+    wr_en = 1;
+    rd_en = 1;
+    data_in = 8'b00000000;
+
+    // Reset the FIFO
+    reset = 1;
+    #10 reset = 0;
+
+    // Write data to the FIFO
+    for ( i = 0; i < 8; i = i + 1) begin
+        data_in = data_in + 1;
+        #10 wr_en = 1;
+    end
+
+    // Read data from the FIFO
+    for ( i = 0; i < 8; i = i + 1) begin
+        #10 rd_en = 1;
+    end
+
+    // Add more test cases as needed
+
+    $finish;
+end
+
+endmodule
+

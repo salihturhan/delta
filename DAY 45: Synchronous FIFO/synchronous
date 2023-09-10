@@ -1,0 +1,45 @@
+module simple_fifo (
+    output reg [7 : 0] data_out,  // FIFO'dan okunan veri çıkışı
+    output full,                 // FIFO dolu durumu sinyali
+    output empty,                // FIFO boş durumu sinyali
+
+    input [7 : 0] data_in,       // FIFO'ya yazılacak veri girişi
+    input clk,                   // Saat sinyali
+    input reset                  // Sıfırlama sinyali
+);
+
+parameter WIDTH = 8;            // Veri genişliği (8 bit)
+parameter DEPTH = 4;            // FIFO derinliği (4 eleman)
+
+reg [7 : 0] mem [31 : 0];       // FIFO belleği (32 eleman x 8 bit)
+reg [3 : 0] rd_pointer;          // Okuma işaretcisi
+reg [3 : 0] wr_pointer;          // Yazma işaretcisi
+
+// FIFO boş durumu hesaplanır: yazma işaretcisi ile okuma işaretcisi eşitse boş.
+assign empty = ((wr_pointer - rd_pointer) == 0) ? 1'b1 : 1'b0;
+
+// FIFO dolu durumu hesaplanır: yazma işaretcisi ile okuma işaretcisi FIFO derinliğine eşitse dolu.
+assign full  = ((wr_pointer - rd_pointer) == DEPTH) ? 1'b1 : 1'b0;
+
+always @(posedge clk or posedge reset) begin
+    if (reset) begin
+        // Sıfırlama durumu
+        wr_pointer <= 0;
+        rd_pointer <= 0;
+    end
+    else begin
+        if (full == 1'b0) begin
+            // FIFO dolu değilse, veriyi belleğe yaz ve yazma işaretcisini güncelle
+            mem[wr_pointer] <= data_in;
+            wr_pointer <= wr_pointer + 1;
+        end
+        if (empty == 1'b0) begin
+            // FIFO boş değilse, veriyi oku ve okuma işaretcisini güncelle
+            data_out <= mem[rd_pointer];
+            rd_pointer <= rd_pointer + 1;
+        end
+    end
+end
+
+endmodule
+

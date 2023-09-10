@@ -1,0 +1,39 @@
+module serial_adder (
+    input clk, reset,  // Saat ve sıfırlama girişleri
+    input a, b, cin,  // a ve b toplama girişleri, cin taşıma girişi (cin yalnızca ilk iterasyon için kullanılır)
+    output reg s, cout  // s her saat işleminde çıkar ve cout sadece son saat işleminde geçerlidir
+);
+reg c;        // İçsel taşıma (carry) kaydedici
+wire sum;     // FullAdder sonucunu tutan tel
+wire carryout; // FullAdder taşıma çıkışını tutan tel
+
+always @(posedge clk or posedge reset) begin
+    if (reset == 1) begin
+        // Sıfırlama (reset) etkin olduğunda
+        s = 0;      // sıfır yap
+        cout = c;   // cout, içsel taşıma ile aynı yap
+    end else begin
+        cout = 0;   // reset etkinken cout sıfır olmalıdır
+        s = sum;    // her saat işleminde s, sum'a eşitlenir
+        c = carryout; // her saat işleminde c, carryout'a eşitlenir
+    end
+end
+
+// FullAdder bileşenini kullanarak toplama işlemi gerçekleştir
+FullAdder fa (.A(a), .B(b), .Cin(cin), .Sum(sum), .Cout(carryout));
+
+endmodule
+
+module FullAdder(
+  input wire A,    // İlk giriş
+  input wire B,    // İkinci giriş
+  input wire Cin,  // Taşıma girişi
+  output wire Sum, // Toplam çıkış
+  output wire Cout // Taşıma çıkışı
+);
+
+  assign Sum = A ^ B ^ Cin;        // Toplam çıkış, A, B ve Cin'nin XOR'u
+  assign Cout = (A & B) | (Cin & (A ^ B)); // Cout, (A VE B) VEYA (Cin VE (A XOR B)) ile hesaplanır
+ 
+endmodule
+

@@ -1,0 +1,85 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 09/08/2023 03:46:48 PM
+// Design Name: 
+// Module Name: Dualport_tb
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module Dualport_tb;
+    reg  clk;           // Clock signal
+    reg  rst;           // Reset signal
+    reg  [3:0] write_addr0;  // Read port 1 address (4-bit)
+    reg  [3:0] write_addr1;  // Read port 2 address (4-bit)
+    reg  write_enable;  // Write enable signal
+    reg  [7:0] data_in;   // Data input (8-bit)
+    reg  port_en_0;
+    reg  port_en_1;
+    wire [7:0] data_out0; // Data output for read port 1 (8-bit)
+    wire [7:0] data_out1;  // Data output for read port 2 (8-bit)
+    
+
+    // Instantiate the dual-port RAM module
+    Dualport ram (
+        .clk(clk),
+        .rst(rst),
+        .write_addr0(write_addr0),
+        .write_addr1(write_addr1),
+        .write_enable(write_enable),
+        .data_in(data_in),
+        .port_en_0(port_en_0),
+        .port_en_1(port_en_1),
+        .data_out0(data_out0),
+        .data_out1(data_out1));
+ 
+    // Clock generation
+    always begin
+        clk = ~clk;
+        #5;  // Toggle the clock every 5 time units
+    end
+
+    // Test sequence
+    initial begin
+        // Initialize signals
+        clk = 0;
+        rst = 0;
+        write_addr0 = 0;
+        write_addr1 = 0;
+        port_en_0 = 0;
+        port_en_1 = 0;
+        write_enable = 0;
+        data_in = 8'h00;
+
+        // Reset the RAM
+        rst = 1;
+        #10;
+        rst = 0;
+
+        // Write data to RAM
+        write_addr0 = 4'h0; 
+        port_en_0 = 1; // Write to address 0
+        data_in = 8'hAA;    // Write AA to address 0
+        write_enable = 1;
+        #10;
+        
+        
+        
+        $finish;  // End simulation
+    end
+
+endmodule
+

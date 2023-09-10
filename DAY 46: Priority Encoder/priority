@@ -1,0 +1,27 @@
+module pri_en(data, y, en, clk);
+input [7:0] data;     // 8 bitlik veri girişi
+input clk;            // Saat sinyali
+input en;             // Etkinleştirme sinyali
+output reg [2:0] y;   // 3 bitlik çıkış sinyali
+reg [2:0] x;          // 3 bitlik içsel durum
+always @(posedge clk) begin
+    if (en) begin
+        // Etkinleştirme sinyali etkin olduğunda çalışır
+        // Veriye göre öncelikli kodlama yapılır
+        casex(data)
+            8'b00000001: x = 3'b000;
+            8'b0000001x: x = 3'b001;
+            8'b000001xx: x = 3'b010;
+            8'b00001xxx: x = 3'b011;
+            8'b0001xxxx: x = 3'b100;// Don't care kullanılarak yalnızca sıfırdan sonra gelen ilk 1 bitine bakılmıştır
+            8'b001xxxxx: x = 3'b101;
+            8'b01xxxxxx: x = 3'b110;
+            8'b1xxxxxxx: x = 3'b111;
+            default: x = 3'b000; // Eşleşme yoksa x'i sıfırla
+        endcase
+    end
+    // Çıkışı içsel durum ile eşleştir
+    assign y = x;
+end
+endmodule
+

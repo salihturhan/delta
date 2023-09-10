@@ -1,0 +1,11 @@
+
+module clock_buffer(
+    input mclk,   // Giriş saat sinyali
+    output bclk   // Çıkış saat sinyali
+);
+
+// Giriş saat sinyali doğrudan çıkış saat sinyaline yönlendirilir.
+buf b1(bclk, mclk);
+
+endmodule
+
