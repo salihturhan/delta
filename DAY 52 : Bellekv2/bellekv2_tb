@@ -1,0 +1,49 @@
+`timescale 1ns / 1ps
+
+module tb_bellekv2();
+
+    reg clk = 0;
+    reg tb_we = 0;
+    reg [7:0] address = 0;
+    reg [31:0] write_in = 0;
+    wire [31:0] read_out;
+    reg [31:0] memory[0:255]; // 32-bit genişliğinde 256 hücrelik bellek tanımladık
+    // bellekv1 modülü örnekleme
+    bellekv1 uut (
+        .clk(clk),
+        .tb_we(tb_we),
+        .address(address),
+        .write_in(write_in),
+        .read_out(read_out)
+    );
+
+
+
+    initial begin
+    $readmemb("ornek_bellek.mem", memory); // memory_file.mem dosyasını oku ve belleğe yükle
+    end
+     always begin
+    clk=~clk;
+    #5;
+    end
+    
+    always@(posedge clk) begin
+        tb_we=1;#10           
+
+        write_in<=memory[address];
+        $display(memory[address]);
+         address<=address+1;
+        tb_we=0;    
+
+        #10;
+        
+       
+    
+    
+    end
+
+
+
+
+endmodule
+

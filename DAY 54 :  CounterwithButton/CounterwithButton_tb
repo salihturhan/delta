@@ -1,0 +1,30 @@
+module testbench;
+    wire [6:0] seven_segment;
+    reg rst;
+    reg clk;
+    reg button;
+    bcd_to_seven_segment uut (
+        .button(button),
+        .clk(clk),
+        .rst(rst),
+        .seven_segment(seven_segment)
+    );
+    always begin
+        #5 clk = ~clk;
+    end
+    initial begin
+        clk = 0;
+        rst=1;#10
+        rst=0;#10
+
+        button=1;
+        #100
+        
+
+   
+
+        $finish;
+    end
+
+endmodule
+

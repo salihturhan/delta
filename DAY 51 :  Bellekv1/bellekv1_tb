@@ -1,0 +1,55 @@
+`timescale 1ns / 1ps
+
+
+
+
+module tb_bellekv1(
+    );
+
+ reg clk=0;  
+ //reg [31:0] tb_memory [0:255];//You can use this for 2. question
+ reg tb_we=0; //write enable 1:write 0:read
+ reg [7:0] address=0; // number of target memory row
+ reg [31:0] write_in=0; //write data input
+ wire [31:0] read_out; // read data output
+ /*
+ module bellekv1(
+   output reg[31:0] q,
+   input [31:0] d,
+   input [7:0] a,
+   input we, 
+   input clk);*/
+   
+ bellekv1 uut(.read_out(read_out),
+  .write_in(write_in),.address(address),
+   .tb_we(tb_we), .clk(clk));
+   
+   always begin
+   clk=~clk;
+   #5;
+   end
+   
+   initial begin
+   #10;
+   tb_we=1; //write mode on
+   address=8'h0F; 
+   write_in=32'hABCDEF00; //data
+   #10;
+   tb_we=1;//write mode on
+   address=8'h00;
+   write_in=32'hFBE0015A;
+   #10;   
+   tb_we=0;//write mode off
+   address=8'h0F;
+   #10;
+   if(read_out!=32'hABCDEF00) 
+        $display("Basarisiz: %d. bellek satirindaki deger %d'dir.",address,read_out);
+   else
+        $display("Basarili: %d. bellek satirindaki deger %h'dir.",address,read_out);
+   
+   end
+ 
+    
+    
+endmodule
+

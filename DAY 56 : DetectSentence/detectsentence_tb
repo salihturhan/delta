@@ -1,0 +1,73 @@
+module KelimeSayici_Testbench;
+  reg clk;
+  reg rst;
+  reg [23:0] paragraf_cumlesi;
+  wire [3:0] cumle_sayisi;
+  wire [7:0] hangi_cumleler;
+
+  // KelimeSayici modülünü çağır
+  detectsentence uut (
+    .clk(clk),
+    .rst(rst),
+    .paragraf_cumlesi(paragraf_cumlesi),
+    .cumle_sayisi(cumle_sayisi),
+    .hangi_cumleler(hangi_cumleler)
+  );
+
+  initial begin
+    // Saati başlat
+    clk = 0;
+    rst = 1;
+    #10 rst = 0;
+    
+    // Test senaryosu
+    paragraf_cumlesi = 24'b101101101000000000000000; // Örnek bir cümle
+    #10 rst = 1;
+   
+    #10 rst = 0;
+    paragraf_cumlesi = 24'b101101101101101101101101; // Örnek bir cümle
+    #110
+    rst = 1;
+    #10 rst = 0;
+    paragraf_cumlesi = 24'b101101101000000000000000; // Örnek bir cümle
+    #10
+     rst = 1;
+   
+    #10 rst = 0;
+    paragraf_cumlesi = 24'b101101101101101101101101; // Örnek bir cümle
+    #110
+    rst = 1;
+    #10 rst = 0;
+    paragraf_cumlesi = 24'b101101101000000000000000; // Örnek bir cümle
+    #10
+    rst = 1;
+    #20 rst = 0;
+    paragraf_cumlesi = 24'b101101101101000000000000; // Örnek bir cümle
+    #100
+    rst = 1;
+    #10 rst = 0;
+    paragraf_cumlesi = 24'b101101000000000000000000; // Örnek bir cümle
+    #20
+    rst = 1;
+    #10 rst = 0;
+    paragraf_cumlesi = 24'b101000000000000000000000; // Örnek bir cümle
+    #100
+    rst = 1;
+    #10 rst = 0;
+    
+    
+    
+   
+    
+
+    $finish;
+    
+  end
+
+  always begin
+    // Saati başlat
+    #2 clk = ~clk; // 2 zaman birimi sürekli saat sinyali üret
+  end
+
+endmodule
+

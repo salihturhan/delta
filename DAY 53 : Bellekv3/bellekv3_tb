@@ -1,0 +1,61 @@
+`timescale 1ns / 1ps
+
+
+
+
+module tb_bellekv3(
+    );
+
+ reg clk=0;  
+ reg tb_we=0; //write enable 1:write 0:read
+ reg tb_ke=0; //key enable 1:new key write 0:nothing
+ reg [7:0] address=0; // number of target memory row
+ reg [31:0] write_in=0; //write data input
+ wire [31:0] read_out; // read data output
+ /*
+ module bellekv3(
+   output reg[31:0] q,
+   input [31:0] d,
+   input [7:0] a,
+   input we, 
+   input clk
+   input ke);*/
+   
+ bellekv3 uut(.read_out(read_out),
+  .write_in(write_in),.address(address),
+   .tb_we(tb_we), .clk(clk),.tb_ke(tb_ke));
+   
+   always begin
+   clk=~clk;
+   #5;
+   end
+   
+   initial begin
+   #10;
+   tb_ke=1;//key change on
+   address=8'h00; //Not efects when tb_ke is '1'
+   write_in=32'hAAAAAAAA; //key
+   
+   #10;
+   tb_ke=0; //key change off
+   tb_we=1; //write
+   address=8'h0F; //adress 
+   write_in=32'hABCDEF00;
+   #10;
+   tb_we=1;
+   address=8'h00;
+   write_in=32'h0E21245F;
+   #10;   
+   tb_we=0;
+   address=8'h0F;
+   #10;
+   if(bellekv3.mem[address]!= (32'hABCDEF00 ^ 32'hAAAAAAAA)&& read_out!=32'hABCDEF00 )
+        $display("Basarisiz: %d.Orijinal veri: %b'dir. �ifrelenmi� veri(bellekte):%b sifre:%b",address,read_out,bellekv3.mem[address],bellekv3.mem[255]);
+   else
+        $display("Basarili: %d. Orijinal veri: %b'dir. �ifrelenmi� veri(bellekte):%b sifre:%b",address,read_out,bellekv3.mem[address],bellekv3.mem[255]);
+   end
+    
+    
+    
+endmodule
+

@@ -1,0 +1,35 @@
+module KelimeSayici_Testbench;
+
+  reg clk;
+  reg rst;
+  reg [23:0] cumle;
+  wire [3:0] kelime_sayisi;
+  wire done;
+
+  // KelimeSayici modülünü çağır
+  detect_words uut (
+    .clk(clk),
+    .cumle(cumle),
+    .rst(rst),
+    .kelime_sayisi(kelime_sayisi),
+    .done(done)
+  );
+
+  initial begin
+    // Saati başlat
+    clk = 0;
+    rst = 1;
+    #10 rst = 0;
+    
+    // Test senaryosu
+    cumle = 24'b000101101101101101101101; // Örnek bir cümle
+    #94; // Cümleyi işlemek için bir süre beklet
+    $finish;
+  end
+
+  always begin
+    // Saati başlat
+    #2 clk = ~clk; // 5 zaman birimi sürekli saat sinyali üret
+  end
+
+endmodule

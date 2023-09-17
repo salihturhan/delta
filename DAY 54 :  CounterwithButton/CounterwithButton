@@ -1,0 +1,40 @@
+module bcd_to_seven_segment (
+    input button,                 // Buton girişi
+    input clk,                   // Clock sinyali
+    input rst,                   // Reset sinyali
+    output reg [6:0] seven_segment // Yedi segment görüntüleme çıkışı
+);
+    reg [3:0] count; // 4-bit sayıcı
+
+    // Pozitif kenar (yükselen kenar) tetiklemeli blok
+    always @(posedge clk) begin
+        if (button) begin
+            count <= count + 4'b0001; // Butona basıldığında sayıcıyı bir artır
+        end
+        if (count == 4'b1001) begin
+            count <= 4'b0000; // Sayıcı 9'a ulaştığında sıfırla
+        end
+        if (rst) begin
+            count <= 4'b0000; // Reset sinyali geldiğinde sayıcıyı sıfırla
+        end
+    end
+
+    // Kombinatorik mantık bloğu
+    always @* begin
+        case (count)
+            4'b0000: seven_segment = 7'b1111110; // 0
+            4'b0001: seven_segment = 7'b0110000; // 1
+            4'b0010: seven_segment = 7'b1101101; // 2
+            4'b0011: seven_segment = 7'b1111001; // 3
+            4'b0100: seven_segment = 7'b0110011; // 4
+            4'b0101: seven_segment = 7'b1011011; // 5
+            4'b0110: seven_segment = 7'b1011111; // 6
+            4'b0111: seven_segment = 7'b1110000; // 7
+            4'b1000: seven_segment = 7'b1111111; // 8
+            4'b1001: seven_segment = 7'b1111011; // 9
+            default: seven_segment = 7'b0000000; // Hiçbir şey gösterme
+        endcase
+    end
+
+endmodule
+

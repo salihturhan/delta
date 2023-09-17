@@ -1,0 +1,81 @@
+module detectsentence (
+    input clk,                    // Clock sinyali
+    input [23:0] paragraf_cumlesi, // Paragraf cümlesi girişi (24-bit)
+    input rst,                    // Reset sinyali
+    output reg [3:0] cumle_sayisi, // Cümle sayısı çıkışı (4-bit)
+    output reg [7:0] hangi_cumleler // Hangi cümlelerin algılandığını gösteren çıkış (8-bit)
+);
+
+    integer b = 0; // İndeks sayacı
+    wire [3:0] cumle_belirleme; // Cümle belirleme çıkışı (4-bit)
+    wire sayi = 0; // İşlem tamamlandı sinyali
+
+    // detect_words modülünün çağrılması
+    detect_words a(
+        .clk(clk),
+        .cumle(paragraf_cumlesi),
+        .rst(rst),
+        .kelime_sayisi(cumle_belirleme),
+        .done(sayi)
+    );
+
+    // İnitial blok: Başlangıç değerlerinin atanması
+    initial begin
+        hangi_cumleler = 8'b00000000; // Hangi cümlelerin algılandığını temsil eden çıkışı sıfırla
+    end
+
+    // Pozitif kenar (yükselen kenar) tetiklemeli blok
+    always @(sayi) begin
+        if (cumle_sayisi < 5) begin
+            hangi_cumleler[b] <= 1'b1; // Cümle sayısı 5'ten küçükse, ilgili biti 1 yap
+            b <= b + 1; // İndeks sayacını bir artır
+            cumle_sayisi <= 0; // Cümle sayısını sıfırla
+        end
+        if (cumle_sayisi > 5) begin
+            hangi_cumleler[b] <= 1'b0; // Cümle sayısı 5'ten büyükse, ilgili biti 0 yap
+            b <= b + 1; // İndeks sayacını bir artır
+            cumle_sayisi <= 0; // Cümle sayısını sıfırla
+        end
+
+        cumle_sayisi <= cumle_belirleme; // Cümle sayısı bilgisini güncelle
+    end
+
+endmodule
+
+module detect_words(
+    input clk,                 // Clock sinyali
+    input [23:0] cumle,       // Cümle girişi (24-bit)
+    input rst,                 // Reset sinyali
+    output reg [3:0] kelime_sayisi, // Kelime sayısı çıkışı (4-bit)
+    output reg done            // İşlem tamamlandı sinyali
+);
+
+    integer i = 0; // İndeks sayacı
+    integer a = 0; // Durum değişkeni
+
+    // Pozitif kenar (yükselen kenar) tetiklemeli blok
+    always @(posedge clk) begin
+        if (rst) begin
+            kelime_sayisi <= 4'b0000; // Reset sinyali geldiğinde tüm değerler sıfırlanır.
+            i <= 0;
+            a <= 0;
+            done <= 0;
+        end
+
+        if (i == 23) begin
+            done <= 1; // Cümlenin sonuna geldiğinde işlem tamamlandı sinyali verilir.
+        end else begin
+            i <= i + 1; // Cümle indeksi bir artırılır.
+            a <= a + 1; // Durum değişkeni bir artırılır.
+        end
+
+        if (a > 1) begin
+            if (cumle[i] == 1'b1) begin
+                kelime_sayisi <= kelime_sayisi + 1; // Kelimeye işaret eden sinyali yakalarsak kelime sayısını bir artırırız.
+                a <= 0; // Durum değişkenini sıfırlarız.
+            end
+        end
+    end
+
+endmodule
+

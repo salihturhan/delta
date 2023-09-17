@@ -1,0 +1,37 @@
+
+`timescale 1ns / 1ps
+
+// Bellek modülü tanımı
+module bellekv1(
+    input clk,               // Clock sinyali
+    input [7:0] address,    // Adres girişi (8-bit)
+    input tb_we,            // Yazma kontrol sinyali (tek bit)
+    input [31:0] write_in,  // Yazma verisi (32-bit)
+    output reg [31:0] read_out // Okuma verisi çıkışı (32-bit)
+);
+
+    // 32-bit genişliğinde 256 hücreli bellek tanımı
+    reg [31:0] mem [0:255];
+
+    integer i = 0; // Döngüde kullanılmak üzere tamsayı tanımlaması ve başlangıç değeri
+
+    // Bellek başlangıç değerlerinin atanması
+    initial begin
+        // Tüm bellek hücrelerine 0 değeri atanıyor
+        for (i = 0; i < 256; i = i + 1) begin
+            mem[i] = 32'h00000000; // Her hücreye 32-bit 0 değeri atanıyor
+        end
+    end
+
+    // Her pozitif kenar (yükselen kenar) için çalışacak olan blok
+    always @(posedge clk) begin
+        // Yazma işlemi kontrolü
+        case (tb_we)
+            1'b1: mem[address] <= write_in; // Yazma işlemi gerçekleştiriliyor
+            1'b0: read_out <= mem[address]; // Okuma işlemi gerçekleştiriliyor
+            default: read_out <= mem[address]; // Varsayılan: Okuma işlemi gerçekleştiriliyor
+        endcase    
+    end   
+   
+endmodule
+
